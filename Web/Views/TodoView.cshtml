@@ -1,0 +1,11 @@
+﻿@page
+@model Web.ViewModels.TodoViewModel
+@{
+}
+
+<body>
+    <p class="glyphicon-bold">@Model.Text + "(za " + @Model.DaysLeft + "!)"</p>
+    <p>@Model.DateDue.ToString()</p>
+    <button id="markCompleted" class="b">Mark as completed</button>
+</body>
+

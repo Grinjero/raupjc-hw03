@@ -1,0 +1,22 @@
+﻿@model IList<Web.ViewModels.TodoViewModel>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo</title>
+</head>
+<body>
+    <h2>Todo</h2>
+    <button asp-action = "Add">Add new todo</button>
+    <button id="completedTodos">See completed todos</button>
+    <br>
+
+    @if (Model != null)
+    {
+        @foreach (Web.ViewModels.TodoViewModel todoModel in Model)
+        {
+            @Html.Partial("TodoView", todoModel)
+        }
+    }
+</body>
+</html>
