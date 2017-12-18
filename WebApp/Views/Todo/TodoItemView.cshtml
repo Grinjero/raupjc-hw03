@@ -1,0 +1,10 @@
+﻿@model TodoViewModel
+@{
+}
+
+<body>
+    <p class="glyphicon-bold">  + "(za " + @Model.DaysLeft + "!)"</p>
+    <p>@Model.DateDue.ToString()</p>
+    <a class="btn btn-default" asp-action="MarkCompleted">Mark as completed</a>
+</body>
+

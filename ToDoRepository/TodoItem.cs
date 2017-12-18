@@ -17,18 +17,20 @@ namespace ToDoRepository
 
         public List<TodoLabel> Labels { get; set; }
 
-        public DateTime? DateDue { get; set; }
+        public Nullable<DateTime> DateDue { get; set; }
 
         public TodoItem(string text, Guid userId)
         {
             Id = Guid.NewGuid();
             Text = text;
-            DateCreated = DateTime.UtcNow;
+            DateCreated = DateTime.Now;
             UserId = userId;
             Labels = new List<TodoLabel>();
         }
 
-        public TodoItem() {}
+        public TodoItem() {
+            DateCreated = DateTime.Now;
+        }
 
         public bool isCompleted
         {
@@ -38,7 +40,7 @@ namespace ToDoRepository
             }
         }
 
-        public DateTime? DateCompleted { get; set; }
+        public Nullable<DateTime> DateCompleted { get; set; }
 
         public DateTime DateCreated { get; set; }
 

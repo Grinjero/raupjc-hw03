@@ -17,18 +17,44 @@ namespace ToDoRepository
         }
         public void Add(TodoItem todoItem)
         {
-            if(_context.TodoItems.Contains(todoItem))
+            if (_context.TodoItems.FirstOrDefault(t => t.Id.Equals(todoItem.Id)) != null)
             {
                 throw new DuplicateTodoItemException(todoItem.Id);
             }
+
+            //ResolveLabels(todoItem);
 
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
         }
 
+        public void ResolveLabels(TodoItem todoItem)
+        {
+            if (todoItem.Labels != null)
+            {
+                List<TodoLabel> tempList = new List<TodoLabel>(todoItem.Labels);
+                foreach (TodoLabel label in todoItem.Labels)
+                {
+
+                    TodoLabel found = _context.TodoItemLabels.FirstOrDefault(t => t.Equals(label));
+                    if ( found != null)
+                    {
+                        tempList.Remove(label);
+                        tempList.Add(found);
+                    }
+                    else
+                    {
+                        _context.TodoItemLabels.Add(label);
+                    }
+                }
+
+                todoItem.Labels = tempList;
+            }
+        }
+
         public TodoItem Get(Guid todoId, Guid userId)
         {
-            TodoItem item = _context.TodoItems.First(t => t.Id.Equals(todoId));
+            TodoItem item = _context.TodoItems.FirstOrDefault(t => t.Id.Equals(todoId));
             if (item == null)
             {
                 return null;
@@ -41,7 +67,7 @@ namespace ToDoRepository
             return item;
         }
 
-        public List<TodoItem> GetActive(Guid userId) => _context.TodoItems.Where(t => t.UserId.Equals(userId) && t.DateCompleted != null).ToList();
+        public List<TodoItem> GetActive(Guid userId) => _context.TodoItems.Where(t => t.UserId.Equals(userId) && t.DateCompleted.HasValue).ToList();
 
         public List<TodoItem> GetAll(Guid userId) => _context.TodoItems
                 .Where(t => t.UserId.Equals(userId))
@@ -76,7 +102,7 @@ namespace ToDoRepository
 
         public void Update(TodoItem todoItem, Guid userId)
         {
-            TodoItem item = _context.TodoItems.First(t => t.Equals(todoItem));
+            TodoItem item = _context.TodoItems.FirstOrDefault(t => t.Equals(todoItem));
             if(item == null)
             {
                 _context.TodoItems.Add(todoItem);
@@ -86,6 +112,8 @@ namespace ToDoRepository
             {
                 throw new TodoAccessDeniedException(userId, todoItem.Id);
             }
+
+            //ResolveLabels(todoItem);
 
             _context.TodoItems.Remove(item);
             _context.TodoItems.Add(todoItem);

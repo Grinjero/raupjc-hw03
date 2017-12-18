@@ -1,0 +1,31 @@
+﻿@model AddTodoViewModel
+
+<html>
+<body>
+    <h1>Adding a todo</h1>
+    <form asp-action="Add">
+        <div class="form-group">
+            <label asp-for="Text"></label>
+            <input class="form-control" asp-for="Text">
+            <span asp-validation-for="Text" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for= "DateDue"></label>
+            <input class="form-control" asp-for="DateDue" />
+            <span asp-validation-for="DateDue" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Labels"></label>
+            <input class="form-control" asp-for="Labels" />
+            <span asp-validation-for="DateDue" class="text-danger"></span>
+        </div>
+
+        <div>
+            <a class="btn btn-default" asp-action="Index">Cancel</a>
+            <input type="submit" value="Save" class="btn btn-success" />
+        </div>
+    </form>
+</body>
+</html>
