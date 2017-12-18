@@ -2,9 +2,34 @@
 @{
 }
 
-<body>
-    <p class="glyphicon-bold">  + "(za " + @Model.DaysLeft + "!)"</p>
-    <p>@Model.DateDue.ToString()</p>
-    <a class="btn btn-default" asp-action="MarkCompleted">Mark as completed</a>
-</body>
+<br />
+    @if(!Model.DateCompleted.HasValue) {
+        if (Model.DateDue.HasValue)
+        {
+
+            if (Model.DaysLeft > 0)
+            {
+            <p class="glyphicon-bold"> @Model.Text  (za @Model.DaysLeft dana!)</p>
+            <p>@Model.DateDueText</p>
+            }
+            else
+            {
+                <p class="glyphicon-bold"> @Model.Text  (prošao rok!)</p>
+                <p>@Model.DateDueText</p>
+
+            }
+        }
+        else
+        {
+            <p class="glyphicon-bold"> @Model.Text</p>
+        }
+        <a class="btn btn-default" asp-action="MarkCompleted" asp-route-id="@Model.Id">Mark as completed</a>
+    }
+    else
+    {
+        <p class="glyphicon-bold"> @Model.Text</p>
+        <p class="glyphicon-bold">@Model.DateDueText</p>
+        <a class="btn btn-default" asp-action="Remove" asp-route-id="@Model.Id">Remove from completed</a>
+    } 
+<br />
 

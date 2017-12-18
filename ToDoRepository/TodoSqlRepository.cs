@@ -22,7 +22,7 @@ namespace ToDoRepository
                 throw new DuplicateTodoItemException(todoItem.Id);
             }
 
-            //ResolveLabels(todoItem);
+            ResolveLabels(todoItem);
 
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
@@ -35,15 +35,17 @@ namespace ToDoRepository
                 List<TodoLabel> tempList = new List<TodoLabel>(todoItem.Labels);
                 foreach (TodoLabel label in todoItem.Labels)
                 {
-
-                    TodoLabel found = _context.TodoItemLabels.FirstOrDefault(t => t.Equals(label));
+                    string labelText = label.Value;
+                    TodoLabel found = _context.TodoItemLabels.FirstOrDefault(t => t.Value.Equals(labelText));
                     if ( found != null)
                     {
                         tempList.Remove(label);
                         tempList.Add(found);
+                        found.LabelTodoItems.Add(todoItem);
                     }
                     else
                     {
+                        label.LabelTodoItems.Add(todoItem);   
                         _context.TodoItemLabels.Add(label);
                     }
                 }
@@ -67,14 +69,14 @@ namespace ToDoRepository
             return item;
         }
 
-        public List<TodoItem> GetActive(Guid userId) => _context.TodoItems.Where(t => t.UserId.Equals(userId) && t.DateCompleted.HasValue).ToList();
+        public List<TodoItem> GetActive(Guid userId) => _context.TodoItems.Where(t => t.UserId.Equals(userId) && !t.DateCompleted.HasValue).ToList();
 
         public List<TodoItem> GetAll(Guid userId) => _context.TodoItems
                 .Where(t => t.UserId.Equals(userId))
                 .OrderBy(t => t.DateCreated)
                 .ToList();
 
-        public List<TodoItem> GetCompleted(Guid userId) => _context.TodoItems.Where(t => t.UserId.Equals(userId) && t.isCompleted).ToList();
+        public List<TodoItem> GetCompleted(Guid userId) => _context.TodoItems.Where(t => t.UserId.Equals(userId) && t.DateCompleted.HasValue).ToList();
 
         public List<TodoItem> GetFiltered(Func<TodoItem, bool> filterFunction, Guid userId) => _context.TodoItems.Where(t => filterFunction(t)).ToList();
 
@@ -97,6 +99,7 @@ namespace ToDoRepository
             }
 
             _context.TodoItems.Remove(item);
+            _context.SaveChanges();
             return true;
         }
 
@@ -113,7 +116,7 @@ namespace ToDoRepository
                 throw new TodoAccessDeniedException(userId, todoItem.Id);
             }
 
-            //ResolveLabels(todoItem);
+            ResolveLabels(todoItem);
 
             _context.TodoItems.Remove(item);
             _context.TodoItems.Add(todoItem);

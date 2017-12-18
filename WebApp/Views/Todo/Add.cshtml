@@ -12,14 +12,14 @@
 
         <div class="form-group">
             <label asp-for= "DateDue"></label>
-            <input class="form-control" asp-for="DateDue" />
+            <input class="form-control" asp-for="DateDue" min="1753-1-2" max="9999-12-30"/>
             <span asp-validation-for="DateDue" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="Labels"></label>
+            <label asp-for="Labels">(Labels separated by comas)</label>
             <input class="form-control" asp-for="Labels" />
-            <span asp-validation-for="DateDue" class="text-danger"></span>
+            <span asp-validation-for="Labels" class="text-danger"></span>
         </div>
 
         <div>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace ToDoRepository
 
         public TodoItem() {
             DateCreated = DateTime.Now;
+            Id = Guid.NewGuid();
         }
 
         public bool isCompleted
@@ -39,7 +41,7 @@ namespace ToDoRepository
                 return DateCompleted.HasValue;
             }
         }
-
+        
         public Nullable<DateTime> DateCompleted { get; set; }
 
         public DateTime DateCreated { get; set; }
@@ -94,6 +96,12 @@ namespace ToDoRepository
         {
             Id = Guid.NewGuid();
             Value = value;
+            LabelTodoItems = new List<TodoItem>();
+        }
+
+        public TodoLabel()
+        {
+            Id = Guid.NewGuid();
             LabelTodoItems = new List<TodoItem>();
         }
 
